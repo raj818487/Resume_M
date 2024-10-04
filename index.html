@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fixed A4 Size PDF Download</title>
+    <title>Mital Solanki Resume</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -21,28 +21,6 @@
         margin: auto;
         background: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      h1,
-      h2,
-      p {
-        margin: 0 0 15px;
-      }
-
-      h1 {
-        font-size: 24px;
-        text-align: center;
-        color: #333;
-      }
-
-      h2 {
-        font-size: 20px;
-        color: #4a90e2;
-      }
-
-      p {
-        font-size: 16px;
-        color: #555;
       }
 
       .resume-container {
@@ -271,6 +249,10 @@
       Download as PDF
     </button>
 
+    <button class="download-btn" onclick="downloadJPEG()">
+      Download as JPEG
+    </button>
+
     <script>
       async function downloadPDF() {
         const { jsPDF } = window.jspdf;
@@ -292,7 +274,24 @@
         pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
 
         // Save the PDF
-        pdf.save("resume.pdf");
+        pdf.save("mital_resume.pdf");
+      }
+
+      async function downloadJPEG() {
+        const resume = document.getElementById("resume");
+        const canvas = await html2canvas(resume, {
+          scale: 2, // Scale for better image quality
+        });
+
+        const imgData = canvas.toDataURL("image/jpeg", 1.0); // Generate high-quality JPEG
+
+        // Create a link element to download the image
+        const link = document.createElement("a");
+        link.href = imgData;
+        link.download = "resume.jpeg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
       }
     </script>
   </body>
