@@ -3,17 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mital Solanki Resume</title>
+    <title>Fixed A4 Size PDF Download</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-      /* General Styling */
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
         margin: 0;
         padding: 0;
-        background-color: #f2f2f2;
+      }
+
+      .resume-container {
+        width: 210mm; /* A4 width */
+        height: 297mm; /* A4 height */
+        padding: 20mm;
+        margin: auto;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0 0 15px;
+      }
+
+      h1 {
+        font-size: 24px;
+        text-align: center;
         color: #333;
+      }
+
+      h2 {
+        font-size: 20px;
+        color: #4a90e2;
+      }
+
+      p {
+        font-size: 16px;
+        color: #555;
       }
 
       .resume-container {
@@ -238,37 +267,32 @@
       </div>
     </div>
 
-    <!-- Button for PDF download -->
-    <button class="download-btn" onclick="downloadResume()">
+    <button class="download-btn" onclick="downloadPDF()">
       Download as PDF
     </button>
 
     <script>
-      function downloadResume() {
-        const resumeElement = document.getElementById("resume");
+      async function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("portrait", "mm", "a4"); // Create A4 PDF
 
-        html2canvas(resumeElement).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF("p", "mm", "a4");
-          const imgWidth = 210; // A4 page width in mm
-          const pageHeight = 297; // A4 page height in mm
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          let heightLeft = imgHeight;
-          let position = 0;
-
-          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-
-          while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-
-          pdf.save("Mital_Solanki_Resume.pdf");
+        const resume = document.getElementById("resume");
+        const canvas = await html2canvas(resume, {
+          scale: 2, // Scale the canvas for better resolution
         });
+
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        let position = 0;
+
+        // Add image to PDF
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+
+        // Save the PDF
+        pdf.save("resume.pdf");
       }
     </script>
   </body>
